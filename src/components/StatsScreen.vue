@@ -76,38 +76,38 @@ const formatDiff = (diff: number) => {
       </div>
     </div>
 
-    <div class="sub-stats">
-      <div class="stat-item">
-        <div class="label">Accuracy</div>
-        <div class="value">{{ Math.round(run.accuracy) }}%</div>
+    <div class="stats-grid">
+      <div class="stat-group">
+        <div class="stat-item">
+          <div class="label">Accuracy</div>
+          <div class="value">{{ Math.round(run.accuracy) }}%</div>
+        </div>
+        <div class="stat-item">
+          <div class="label">Raw WPM</div>
+          <div class="value">{{ Math.round(run.rawWpm) }}</div>
+        </div>
+        <div class="stat-item">
+          <div class="label">Consistency</div>
+          <div class="value">{{ Math.round(run.consistency) }}%</div>
+        </div>
       </div>
-      <div class="stat-item">
-        <div class="label">Raw WPM</div>
-        <div class="value">{{ Math.round(run.rawWpm) }}</div>
-      </div>
-      <div class="stat-item">
-        <div class="label">Consistency</div>
-        <div class="value">{{ Math.round(run.consistency) }}%</div>
-      </div>
-      <div class="stat-item characters-stat">
-        <div class="label">Characters</div>
-        <div class="char-breakdown">
-          <div class="char-unit">
-            <div class="value">{{ run.correctChars }}</div>
-            <div class="sub-label">correct</div>
-          </div>
-          <div class="char-unit">
-            <div class="value">{{ run.incorrectChars }}</div>
-            <div class="sub-label">wrong</div>
-          </div>
-          <div class="char-unit">
-            <div class="value">{{ run.extraChars }}</div>
-            <div class="sub-label">extra</div>
-          </div>
-          <div class="char-unit">
-            <div class="value">{{ run.missedChars }}</div>
-            <div class="sub-label">missed</div>
-          </div>
+
+      <div class="stat-group characters">
+        <div class="char-unit">
+          <div class="value">{{ run.correctChars }}</div>
+          <div class="sub-label">correct</div>
+        </div>
+        <div class="char-unit">
+          <div class="value">{{ run.incorrectChars }}</div>
+          <div class="sub-label">wrong</div>
+        </div>
+        <div class="char-unit">
+          <div class="value">{{ run.extraChars }}</div>
+          <div class="sub-label">extra</div>
+        </div>
+        <div class="char-unit">
+          <div class="value">{{ run.missedChars }}</div>
+          <div class="sub-label">missed</div>
         </div>
       </div>
     </div>
@@ -158,36 +158,50 @@ const formatDiff = (diff: number) => {
 
 .peak-stats-container {
   display: flex;
-  gap: 20px;
+  gap: 15px;
   width: 100%;
   justify-content: center;
-  margin-bottom: 10px;
 }
 
 .peak-stat.highlighted-box {
   background: var(--active-row-bg);
   border: 2px solid var(--text-completed);
-  padding: 15px 30px;
-  border-radius: 12px;
+  padding: 8px 20px;
+  border-radius: 8px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  box-shadow: 4px 4px 0px var(--shadow-color);
+  box-shadow: 3px 3px 0px var(--shadow-color);
 }
 
 .peak-stat.highlighted-box .label {
   font-weight: bold;
   color: var(--text-main);
-  font-size: 1rem;
+  font-size: 0.8rem;
 }
 
 .peak-stat.highlighted-box .value {
-  font-size: 2.5rem;
+  font-size: 1.8rem;
   color: var(--text-typed-correct);
 }
 
-.sub-stats {
-  grid-template-columns: repeat(4, 1fr);
+.stats-grid {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.stat-group {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  padding: 10px 0;
+  border-top: 2px dashed var(--active-row-bg);
+}
+
+.stat-group.characters {
+  border-bottom: 2px dashed var(--active-row-bg);
 }
 
 .stat-item {
@@ -197,39 +211,35 @@ const formatDiff = (diff: number) => {
 }
 
 .stat-item .label {
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   color: var(--text-upcoming);
   text-transform: uppercase;
+  font-weight: bold;
 }
 
-.char-breakdown {
-  display: flex;
-  gap: 15px;
-  margin-top: 5px;
+.stat-item .value {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: var(--text-typed-correct);
 }
 
 .char-unit {
   display: flex;
   flex-direction: column;
   align-items: center;
-  position: relative;
+}
+
+.char-unit .value {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--text-typed-correct);
 }
 
 .char-unit .sub-label {
   font-size: 0.6rem;
+  font-weight: bold;
   color: var(--text-completed);
   text-transform: uppercase;
-  transform: rotate(90deg);
-  transform-origin: left center;
-  white-space: nowrap;
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  margin-top: 10px;
-}
-
-.characters-stat {
-  grid-column: span 1;
 }
 
 .actions {

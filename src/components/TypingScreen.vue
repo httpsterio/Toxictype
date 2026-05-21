@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, computed, nextTick, watch } from 'vue';
 import type { Mode, WordStats } from '../types';
-import ThemeToggle from './ThemeToggle.vue';
 
 const props = defineProps<{
   mode: Mode;
@@ -104,7 +103,6 @@ const formatTime = (seconds: number) => {
         <span>Peak30: {{ livePeak30 ? Math.round(livePeak30) : '-' }}</span>
         <span>Peak60: {{ livePeak60 ? Math.round(livePeak60) : '-' }}</span>
       </div>
-      <ThemeToggle />
     </div>
 
     <div class="word-container">
@@ -142,15 +140,33 @@ const formatTime = (seconds: number) => {
           }"
         >
           <template v-if="(row.start + wIdx - 1) === currentWordIndex">
+            <!-- Typed chars -->
             <span 
-              v-for="(char, cIdx) in words[currentWordIndex]" 
-              :key="cIdx"
-              :class="{
-                'char-correct': typedBuffer[cIdx] === char,
-                'char-error': typedBuffer[cIdx] && typedBuffer[cIdx] !== char,
-                'char-untyped': !typedBuffer[cIdx]
-              }"
-            >{{ char }}</span><span v-if="typedBuffer.length > words[currentWordIndex].length" class="char-extra">{{ typedBuffer.slice(words[currentWordIndex].length) }}</span>
+              v-for="(char, cIdx) in words[currentWordIndex].slice(0, typedBuffer.length)" 
+              :key="'typed-'+cIdx"
+              :class="typedBuffer[cIdx] === char ? 'char-typed-correct' : 'char-typed-wrong'"
+            >{{ char }}</span>
+
+            <!-- Cursor target -->
+            <span 
+              v-if="typedBuffer.length < words[currentWordIndex].length"
+              class="char-cursor-target"
+            >
+              {{ words[currentWordIndex][typedBuffer.length] }}
+              <span class="caret"></span>
+            </span>
+
+            <!-- Untyped remainder -->
+            <span 
+              v-for="(char, rIdx) in words[currentWordIndex].slice(typedBuffer.length + 1)" 
+              :key="'rem-'+rIdx"
+              class="char-remainder"
+            >{{ char }}</span>
+
+            <!-- Extra chars -->
+            <span v-if="typedBuffer.length > words[currentWordIndex].length" class="char-extra">
+              {{ typedBuffer.slice(words[currentWordIndex].length) }}
+            </span>
           </template>
           <template v-else>
             {{ words[row.start + wIdx - 1] }}
@@ -191,7 +207,7 @@ const formatTime = (seconds: number) => {
 
 .mode-tag {
   background: var(--text-main);
-  color: var(--container-bg);
+  color: var(--bg-color);
   padding: 5px 15px;
   font-weight: bold;
 }
@@ -204,13 +220,13 @@ const formatTime = (seconds: number) => {
   font-size: 1rem;
   display: flex;
   gap: 15px;
-  color: var(--text-muted);
+  color: var(--text-upcoming);
 }
 
 .word-container {
-  font-size: 2rem;
-  line-height: 1.5;
-  height: 250px;
+  font-size: 2.2rem;
+  line-height: 1.6;
+  height: 300px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -227,61 +243,99 @@ const formatTime = (seconds: number) => {
   pointer-events: none;
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 12px;
   justify-content: center;
 }
 
-/* We hide the full word list and only show the displayRows */
 .word-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 12px;
   justify-content: center;
-  min-height: 3.5rem;
-  transition: all 0.3s ease;
+  min-height: 4rem;
+  transition: all 0.2s ease;
+  padding: 10px 0;
+  align-items: center;
+}
+
+.active-row {
+  background-color: var(--active-row-bg);
+  border-radius: 10px;
+  padding: 15px 0;
 }
 
 .word {
-  padding: 0 5px;
+  padding: 0 4px;
   position: relative;
+  white-space: nowrap;
 }
 
+/* Level 1: Upcoming words */
 .word.upcoming {
-  color: var(--text-muted);
-  opacity: 0.5;
+  color: var(--text-upcoming);
 }
 
-.word.completed.correct {
-  color: var(--text-muted);
+/* Level 2 & 3: Completed words */
+.word.completed {
+  color: var(--text-completed);
 }
 
 .word.completed.error {
-  color: var(--error-color);
-  text-decoration: underline wavy;
+  text-decoration: underline wavy var(--error-wavy);
 }
 
-.word.active {
-  color: var(--text-main);
-}
-
-.char-correct {
-  color: var(--text-typed);
-  opacity: 1;
-}
-
-.char-error {
-  color: var(--error-color);
-  opacity: 1;
+/* Level 4: Active correct typed */
+.char-typed-correct {
+  color: var(--text-typed-correct);
   font-weight: bold;
 }
 
-.char-untyped {
-  opacity: 0.5;
+/* Level 5: Active wrong typed */
+.char-typed-wrong {
+  color: var(--text-typed-wrong);
+  font-weight: bold;
+  text-decoration: underline solid var(--text-typed-wrong) 2px;
 }
 
+/* Level 6: Active extra chars */
 .char-extra {
-  color: var(--error-color);
-  opacity: 0.7;
+  color: var(--text-typed-wrong);
+  opacity: 0.6;
+  font-weight: bold;
+  text-decoration: underline solid var(--text-typed-wrong) 2px;
+}
+
+/* Level 7: Cursor target */
+.char-cursor-target {
+  background-color: var(--cursor-bg);
+  color: var(--cursor-text);
+  font-weight: bold;
+  border-radius: 6px;
+  padding: 0 4px;
+  margin: 0 1px;
+  display: inline-block;
+  line-height: 1.1;
+  position: relative;
+}
+
+.caret {
+  position: absolute;
+  left: -2px;
+  top: 10%;
+  height: 80%;
+  width: 2px;
+  background-color: var(--caret-color);
+  animation: blink 1.2s infinite;
+}
+
+/* Active untyped remainder */
+.char-remainder {
+  color: var(--text-remainder);
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
 }
 
 .bottom-controls {
@@ -299,12 +353,13 @@ const formatTime = (seconds: number) => {
 
 .restart-hint {
   font-size: 0.8rem;
-  color: var(--accent-color);
+  color: var(--text-main);
   font-weight: bold;
 }
 
 .end-btn {
-  background: var(--text-muted);
-  border-color: var(--text-muted);
+  background: var(--text-completed);
+  border-color: var(--text-completed);
+  color: var(--bg-color);
 }
 </style>

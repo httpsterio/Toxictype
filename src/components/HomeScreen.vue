@@ -43,6 +43,7 @@ const bestInf = getBestForMode('infinite');
           <span class="value">{{ typeof bestInf?.peak60s === 'number' ? Math.round(bestInf.peak60s) + ' WPM' : 'no runs yet' }}</span>
         </div>
       </div>
+      <button class="all-scores-btn" @click="() => {}">All Scores</button>
     </div>
   </div>
 </template>
@@ -58,7 +59,7 @@ const bestInf = getBestForMode('infinite');
 .title {
   font-size: 5rem;
   margin: 0;
-  color: var(--accent-color);
+  color: var(--text-main);
   animation: wiggle 1s infinite ease-in-out;
 }
 
@@ -87,12 +88,20 @@ const bestInf = getBestForMode('infinite');
   flex-direction: column;
   align-items: center;
   padding: 10px;
-  border: 2px dashed var(--text-muted);
+  border: 2px dashed var(--text-completed);
+}
+
+.all-scores-btn {
+  width: 100%;
+  margin-top: 20px;
+  background: var(--text-completed);
+  color: var(--bg-color);
+  border-color: var(--text-completed);
 }
 
 .label {
   font-size: 0.9rem;
-  color: var(--text-muted);
+  color: var(--text-upcoming);
 }
 
 .value {

@@ -15,28 +15,43 @@
 :root {
   --font-main: 'Comic Relief', 'Comic Sans MS', 'Comic Neue', cursive;
   
-  /* Light Theme */
-  --bg-color: #ffe4f3; /* baby pink */
+  /* Light Theme Palette */
+  --bg-color: #ffe6f0;
   --container-bg: #ffffff;
-  --text-main: #ff1493; /* hot pink */
-  --text-muted: #dda0dd; /* lavender */
-  --text-typed: #000000; /* solid black for correct */
-  --accent-color: #ff69b4; /* hot pink */
-  --error-color: #ff0000; /* bright red */
+  --text-main: #ff1493;
+  --text-upcoming: #ff8fbf;
+  --text-completed: #a890d8;
+  --error-wavy: #e6004c;
+  --text-remainder: #ff5ca8;
+  --text-typed-correct: #1a0a1f;
+  --text-typed-wrong: #cc0033;
+  --cursor-bg: #ffeb3b;
+  --cursor-text: #1a0a1f;
+  --caret-color: #ff1493;
+  --active-row-bg: rgba(255, 255, 255, 0.4);
+  
   --border-color: #ff1493;
-  --shadow-color: rgba(255, 20, 147, 0.5);
+  --shadow-color: rgba(255, 20, 147, 0.3);
 }
 
 [data-theme='dark'] {
-  --bg-color: #2d004d; /* dark purple */
-  --container-bg: #1a0033;
-  --text-main: #ff00ff; /* neon pink */
-  --text-muted: #00ffff; /* cyan accents */
-  --text-typed: #ffffff; /* solid white for correct in dark mode */
-  --accent-color: #ff00ff;
-  --error-color: #ff0000; /* bright red */
-  --border-color: #00ffff;
-  --shadow-color: rgba(0, 255, 255, 0.5);
+  /* Dark Theme Palette */
+  --bg-color: #1a0a1f;
+  --container-bg: #2d1333;
+  --text-main: #ff00ff;
+  --text-upcoming: #cc6699;
+  --text-completed: #9b88d4;
+  --error-wavy: #ff4d6d;
+  --text-remainder: #ff66b3;
+  --text-typed-correct: #ffffff;
+  --text-typed-wrong: #ff4d6d;
+  --cursor-bg: #00e5ff;
+  --cursor-text: #1a0a1f;
+  --caret-color: #ff66b3;
+  --active-row-bg: rgba(255, 255, 255, 0.05);
+  
+  --border-color: #00e5ff;
+  --shadow-color: rgba(0, 229, 255, 0.2);
 }
 
 * {

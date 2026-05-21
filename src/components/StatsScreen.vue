@@ -120,13 +120,13 @@ const formatDiff = (diff: number) => {
 }
 
 .highlighted {
-  color: var(--accent-color);
+  color: var(--text-main);
   text-shadow: 5px 5px 0px var(--shadow-color);
 }
 
 .new-best {
   font-size: 1.5rem;
-  color: var(--accent-color);
+  color: var(--text-main);
   font-weight: bold;
   text-transform: uppercase;
   margin-top: 10px;
@@ -134,7 +134,7 @@ const formatDiff = (diff: number) => {
 
 .diff {
   font-size: 1rem;
-  color: var(--text-muted);
+  color: var(--text-completed);
 }
 
 .peak-stats, .sub-stats {
@@ -156,7 +156,7 @@ const formatDiff = (diff: number) => {
 
 .stat-item .label {
   font-size: 0.8rem;
-  color: var(--text-muted);
+  color: var(--text-upcoming);
   text-transform: uppercase;
 }
 
@@ -171,7 +171,8 @@ const formatDiff = (diff: number) => {
 }
 
 .secondary {
-  background: var(--text-muted);
-  border-color: var(--text-muted);
+  background: var(--text-completed);
+  border-color: var(--text-completed);
+  color: var(--bg-color);
 }
 </style>

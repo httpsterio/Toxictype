@@ -58,19 +58,19 @@ const formatDiff = (diff: number) => {
     
     <div class="main-stats">
       <div class="stat-item large">
-        <div class="label">WPM</div>
+        <div class="label">{{ run.mode === 'infinite' ? 'Average WPM' : 'WPM' }}</div>
         <div class="value highlighted">{{ Math.round(run.wpm) }}</div>
         <div v-if="isNewBest" class="new-best">new best!</div>
         <div v-else-if="diffVsBest !== null" class="diff">{{ formatDiff(diffVsBest) }}</div>
       </div>
     </div>
 
-    <div v-if="run.mode === 'infinite'" class="peak-stats">
-      <div class="stat-item">
+    <div v-if="run.mode === 'infinite'" class="peak-stats-container">
+      <div class="peak-stat highlighted-box">
         <div class="label">Peak 30s</div>
         <div class="value">{{ run.peakWpm30s ? Math.round(run.peakWpm30s) : '-' }}</div>
       </div>
-      <div class="stat-item">
+      <div class="peak-stat highlighted-box">
         <div class="label">Peak 60s</div>
         <div class="value">{{ run.peakWpm60s ? Math.round(run.peakWpm60s) : '-' }}</div>
       </div>
@@ -89,9 +89,26 @@ const formatDiff = (diff: number) => {
         <div class="label">Consistency</div>
         <div class="value">{{ Math.round(run.consistency) }}%</div>
       </div>
-      <div class="stat-item">
+      <div class="stat-item characters-stat">
         <div class="label">Characters</div>
-        <div class="value">{{ run.correctChars }}/{{ run.incorrectChars }}/{{ run.extraChars }}/{{ run.missedChars }}</div>
+        <div class="char-breakdown">
+          <div class="char-unit">
+            <div class="value">{{ run.correctChars }}</div>
+            <div class="sub-label">correct</div>
+          </div>
+          <div class="char-unit">
+            <div class="value">{{ run.incorrectChars }}</div>
+            <div class="sub-label">wrong</div>
+          </div>
+          <div class="char-unit">
+            <div class="value">{{ run.extraChars }}</div>
+            <div class="sub-label">extra</div>
+          </div>
+          <div class="char-unit">
+            <div class="value">{{ run.missedChars }}</div>
+            <div class="sub-label">missed</div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -106,8 +123,10 @@ const formatDiff = (diff: number) => {
 .stats-screen {
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  gap: 20px;
   align-items: center;
+  justify-content: space-between;
+  height: 100%;
 }
 
 .main-stats {
@@ -137,11 +156,34 @@ const formatDiff = (diff: number) => {
   color: var(--text-completed);
 }
 
-.peak-stats, .sub-stats {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
+.peak-stats-container {
+  display: flex;
   gap: 20px;
   width: 100%;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.peak-stat.highlighted-box {
+  background: var(--active-row-bg);
+  border: 2px solid var(--text-completed);
+  padding: 15px 30px;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 4px 4px 0px var(--shadow-color);
+}
+
+.peak-stat.highlighted-box .label {
+  font-weight: bold;
+  color: var(--text-main);
+  font-size: 1rem;
+}
+
+.peak-stat.highlighted-box .value {
+  font-size: 2.5rem;
+  color: var(--text-typed-correct);
 }
 
 .sub-stats {
@@ -160,9 +202,34 @@ const formatDiff = (diff: number) => {
   text-transform: uppercase;
 }
 
-.stat-item .value {
-  font-size: 1.5rem;
-  font-weight: bold;
+.char-breakdown {
+  display: flex;
+  gap: 15px;
+  margin-top: 5px;
+}
+
+.char-unit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.char-unit .sub-label {
+  font-size: 0.6rem;
+  color: var(--text-completed);
+  text-transform: uppercase;
+  transform: rotate(90deg);
+  transform-origin: left center;
+  white-space: nowrap;
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-top: 10px;
+}
+
+.characters-stat {
+  grid-column: span 1;
 }
 
 .actions {

@@ -108,7 +108,15 @@ h1, h2, h3 {
 
 .toxic-border {
   border: 5px solid var(--border-color);
-  padding: 20px;
+  padding: 40px;
   background: var(--container-bg);
   box-shadow: 10px 10px 0px var(--shadow-color);
+  width: 100%;
+  min-width: 520px;
+  max-width: 800px;
+  min-height: 650px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 0 auto;
 }

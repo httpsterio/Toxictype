@@ -100,8 +100,14 @@ const formatTime = (seconds: number) => {
         <span class="timer">{{ mode === 'infinite' ? formatTime(currentTime) : timeLeft + 's' }}</span>
       </div>
       <div v-if="mode === 'infinite'" class="live-stats">
-        <span>Peak30: {{ livePeak30 ? Math.round(livePeak30) : '-' }}</span>
-        <span>Peak60: {{ livePeak60 ? Math.round(livePeak60) : '-' }}</span>
+        <div class="live-peak-box">
+          <span class="peak-label">Peak30</span>
+          <span class="peak-value">{{ livePeak30 ? Math.round(livePeak30) : '-' }}</span>
+        </div>
+        <div class="live-peak-box">
+          <span class="peak-label">Peak60</span>
+          <span class="peak-value">{{ livePeak60 ? Math.round(livePeak60) : '-' }}</span>
+        </div>
       </div>
     </div>
 
@@ -115,7 +121,15 @@ const formatTime = (seconds: number) => {
           :class="{ 'active': wIdx === currentWordIndex }"
         >
           <template v-if="wIdx === currentWordIndex">
-            {{ typedBuffer.length > word.length ? typedBuffer : word }}
+            <!-- Mirror the structure of the active word to capture exact width -->
+            <span>{{ words[currentWordIndex].slice(0, typedBuffer.length) }}</span>
+            <span v-if="typedBuffer.length < words[currentWordIndex].length" class="char-cursor-target">
+              {{ words[currentWordIndex][typedBuffer.length] }}
+            </span>
+            <span>{{ words[currentWordIndex].slice(typedBuffer.length + 1) }}</span>
+            <span v-if="typedBuffer.length > words[currentWordIndex].length">
+              {{ typedBuffer.slice(words[currentWordIndex].length) }}
+            </span>
           </template>
           <template v-else>{{ word }}</template>
         </span>
@@ -153,7 +167,6 @@ const formatTime = (seconds: number) => {
               class="char-cursor-target"
             >
               {{ words[currentWordIndex][typedBuffer.length] }}
-              <span class="caret"></span>
             </span>
 
             <!-- Untyped remainder -->
@@ -217,16 +230,38 @@ const formatTime = (seconds: number) => {
 }
 
 .live-stats {
-  font-size: 1rem;
   display: flex;
   gap: 15px;
-  color: var(--text-upcoming);
+}
+
+.live-peak-box {
+  background: var(--active-row-bg);
+  border: 2px solid var(--text-upcoming);
+  padding: 4px 10px;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 70px;
+}
+
+.peak-label {
+  font-size: 0.7rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: var(--text-main);
+}
+
+.peak-value {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--text-typed-correct);
 }
 
 .word-container {
   font-size: 2.2rem;
   line-height: 1.6;
-  height: 300px;
+  flex-grow: 1; /* Fill the stabilized container */
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -245,6 +280,7 @@ const formatTime = (seconds: number) => {
   flex-wrap: wrap;
   gap: 12px;
   justify-content: center;
+  font-weight: bold; /* Crucial: measure at max width */
 }
 
 .word-row {
@@ -318,24 +354,9 @@ const formatTime = (seconds: number) => {
   position: relative;
 }
 
-.caret {
-  position: absolute;
-  left: -2px;
-  top: 10%;
-  height: 80%;
-  width: 2px;
-  background-color: var(--caret-color);
-  animation: blink 1.2s infinite;
-}
-
 /* Active untyped remainder */
 .char-remainder {
   color: var(--text-remainder);
-}
-
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
 }
 
 .bottom-controls {

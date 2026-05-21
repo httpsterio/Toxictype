@@ -52,12 +52,14 @@ const bestInf = getBestForMode('infinite');
 .home-screen {
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  gap: 20px;
   align-items: center;
+  justify-content: space-between;
+  height: 100%;
 }
 
 .title {
-  font-size: 5rem;
+  font-size: 4rem;
   margin: 0;
   color: var(--text-main);
   animation: wiggle 1s infinite ease-in-out;

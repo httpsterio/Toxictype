@@ -4,7 +4,7 @@ import { useWordPool } from './useWordPool';
 import { useRunStorage } from './useRunStorage';
 
 export function useTypingState() {
-  const { pullWords } = useWordPool();
+  const { pullWords, resetHistory } = useWordPool();
   const { saveRun } = useRunStorage();
 
   const state = ref<GameState>('home');
@@ -39,6 +39,7 @@ export function useTypingState() {
   const startRun = (selectedMode: Mode) => {
     mode.value = selectedMode;
     state.value = 'idle';
+    resetHistory();
     resetState();
   };
 
@@ -49,6 +50,7 @@ export function useTypingState() {
     if (timerInterval.value) clearInterval(timerInterval.value);
     timerInterval.value = null;
     
+    resetHistory();
     words.value = pullWords(100);
     currentWordIndex.value = 0;
     typedBuffer.value = "";

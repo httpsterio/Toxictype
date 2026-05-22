@@ -28,6 +28,7 @@ export const wordList: string[] = [
 "No re",
 "Gg no re",
 "Ez clap",
+"ezclap",
 "Team diff",
 "Muted",
 "Reported",
@@ -133,10 +134,10 @@ export const wordList: string[] = [
 "Wallet warrior",
 "Report bot",
 "Enjoy the ban",
-"See you in 2 weeks",
+"See you in two weeks",
 "Permaban",
 "Smurf trash",
-"Level 500 silver",
+"Level thousand silver",
 "Forever gold",
 "Forever bronze",
 "Permanent resident of silver",
@@ -144,6 +145,4 @@ export const wordList: string[] = [
 "Torb main",
 "Mercy pocket",
 "Heal bot",
-
-
 ];

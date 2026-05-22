@@ -2,10 +2,12 @@ import { ref, computed } from 'vue';
 import type { Mode, GameState, WordStats, RunRecord } from '../types';
 import { useWordPool } from './useWordPool';
 import { useRunStorage } from './useRunStorage';
+import { useAudio } from './useAudio';
 
 export function useTypingState() {
   const { pullWords, resetHistory } = useWordPool();
   const { saveRun } = useRunStorage();
+  const { playSound } = useAudio();
 
   const state = ref<GameState>('home');
   const mode = ref<Mode>('30s');
@@ -44,6 +46,7 @@ export function useTypingState() {
   };
 
   const resetState = () => {
+    playSound('reset');
     startTime.value = null;
     endTime.value = null;
     currentTime.value = 0;
@@ -130,7 +133,14 @@ export function useTypingState() {
     } else if (e.key === ' ') {
       commitWord();
     } else if (e.key.length === 1 && /[a-zA-Z0-9]/.test(e.key)) {
-      typedBuffer.value += e.key.toLowerCase();
+      const targetWord = words.value[currentWordIndex.value];
+      const typedChar = e.key.toLowerCase();
+      const nextCharIndex = typedBuffer.value.length;
+      
+      if (nextCharIndex >= targetWord.length || typedChar !== targetWord[nextCharIndex]) {
+        playSound('error');
+      }
+      typedBuffer.value += typedChar;
     }
   };
 
@@ -138,6 +148,12 @@ export function useTypingState() {
     const target = words.value[currentWordIndex.value]; // Already lowercased from pool
     const typed = typedBuffer.value; // Already lowercased from handleKeydown
     const isCorrect = normalize(typed) === normalize(target);
+
+    if (isCorrect) {
+      playSound('correct');
+    } else {
+      playSound('error');
+    }
 
     wordHistory.value.push({
       word: target,
@@ -214,6 +230,7 @@ export function useTypingState() {
   };
 
   const endRun = () => {
+    playSound('victory');
     if (timerInterval.value) clearInterval(timerInterval.value);
     timerInterval.value = null;
     endTime.value = Date.now();

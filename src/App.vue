@@ -1,10 +1,13 @@
 <script setup lang="ts">
+import { onMounted, onUnmounted } from 'vue';
 import { useTypingState } from './composables/useTypingState';
 import { useTheme } from './composables/useTheme';
+import { useAudio } from './composables/useAudio';
 import HomeScreen from './components/HomeScreen.vue';
 import TypingScreen from './components/TypingScreen.vue';
 import StatsScreen from './components/StatsScreen.vue';
 import ThemeToggle from './components/ThemeToggle.vue';
+import SoundToggle from './components/SoundToggle.vue';
 
 const {
   state,
@@ -29,6 +32,49 @@ const {
 // Initialize theme at the root to ensure persistence and global attribute setting
 useTheme();
 
+const { playSound, initAudio } = useAudio();
+
+// Global click and mouseover event handlers
+const handleGlobalClick = (e: MouseEvent) => {
+  const target = e.target as HTMLElement;
+  if (target.closest('button')) {
+    playSound('click');
+  }
+};
+
+const handleGlobalMouseOver = (e: MouseEvent) => {
+  const target = e.target as HTMLElement;
+  const button = target.closest('button');
+  if (button) {
+    const related = e.relatedTarget as HTMLElement | null;
+    const oldButton = related ? related.closest('button') : null;
+    if (button !== oldButton) {
+      playSound('hover');
+    }
+  }
+};
+
+// Lazy initialization of AudioContext on first user interaction
+const initOnGesture = () => {
+  initAudio();
+  window.removeEventListener('click', initOnGesture);
+  window.removeEventListener('keydown', initOnGesture);
+};
+
+onMounted(() => {
+  window.addEventListener('click', initOnGesture);
+  window.addEventListener('keydown', initOnGesture);
+  window.addEventListener('click', handleGlobalClick);
+  window.addEventListener('mouseover', handleGlobalMouseOver);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('click', initOnGesture);
+  window.removeEventListener('keydown', initOnGesture);
+  window.removeEventListener('click', handleGlobalClick);
+  window.removeEventListener('mouseover', handleGlobalMouseOver);
+});
+
 const handleEnd = () => {
   if (mode.value === 'infinite') {
     endRun();
@@ -40,7 +86,10 @@ const handleEnd = () => {
 
 <template>
   <div class="app-container">
-    <ThemeToggle class="global-theme-toggle" />
+    <div class="global-controls">
+      <SoundToggle />
+      <ThemeToggle />
+    </div>
     
     <main>
       <HomeScreen v-if="state === 'home'" :onStart="startRun" />
@@ -88,11 +137,13 @@ const handleEnd = () => {
   position: relative;
 }
 
-.global-theme-toggle {
+.global-controls {
   position: fixed;
   top: 20px;
   right: 20px;
   z-index: 100;
+  display: flex;
+  gap: 15px;
 }
 
 main {

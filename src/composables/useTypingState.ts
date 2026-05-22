@@ -62,6 +62,7 @@ export function useTypingState() {
     extraChars.value = 0;
     missedChars.value = 0;
     isRestartArmed.value = false;
+    state.value = 'idle';
   };
 
   const handleKeydown = (e: KeyboardEvent) => {
@@ -86,6 +87,7 @@ export function useTypingState() {
 
     if (isRestartArmed.value) {
       if (e.key === 'Enter') {
+        e.preventDefault();
         resetState();
         state.value = 'idle';
         return;
@@ -96,6 +98,11 @@ export function useTypingState() {
     }
 
     if (e.key === 'Enter') return; // Ignore Enter otherwise
+
+    // Prevent default browser behavior for Backspace and Space keys on the typing screen
+    if (e.key === 'Backspace' || e.key === ' ') {
+      e.preventDefault();
+    }
 
     // Start timer on first keystroke
     if (state.value === 'idle' && e.key.length === 1 && e.key !== ' ') {
@@ -121,7 +128,6 @@ export function useTypingState() {
         }
       }
     } else if (e.key === ' ') {
-      e.preventDefault();
       commitWord();
     } else if (e.key.length === 1 && /[a-zA-Z0-9]/.test(e.key)) {
       typedBuffer.value += e.key.toLowerCase();

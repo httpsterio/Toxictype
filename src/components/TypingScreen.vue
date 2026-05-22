@@ -189,7 +189,7 @@ const formatTime = (seconds: number) => {
     </div>
 
     <div class="bottom-controls">
-      <div class="restart-container">
+      <div v-if="mode !== 'infinite'" class="restart-container">
         <button @click="onRestart" class="restart-btn">Restart (Tab+Enter)</button>
         <div v-if="isRestartArmed" class="restart-hint">Press Enter to restart!</div>
       </div>

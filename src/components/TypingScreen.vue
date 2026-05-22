@@ -235,10 +235,9 @@ const formatTime = (seconds: number) => {
 }
 
 .live-peak-box {
-  background: var(--active-row-bg);
-  border: 2px solid var(--text-upcoming);
+  background: var(--text-main);
   padding: 4px 10px;
-  border-radius: 6px;
+  border-radius: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -249,13 +248,13 @@ const formatTime = (seconds: number) => {
   font-size: 0.7rem;
   font-weight: bold;
   text-transform: uppercase;
-  color: var(--text-main);
+  color: var(--bg-color);
 }
 
 .peak-value {
   font-size: 1.2rem;
   font-weight: bold;
-  color: var(--text-typed-correct);
+  color: var(--bg-color);
 }
 
 .word-container {

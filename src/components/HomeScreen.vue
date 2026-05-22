@@ -43,7 +43,7 @@ const bestInf = getBestForMode('infinite');
           <span class="value">{{ typeof bestInf?.peak60s === 'number' ? Math.round(bestInf.peak60s) + ' WPM' : 'no runs yet' }}</span>
         </div>
       </div>
-      <button class="all-scores-btn" @click="() => {}">All Scores</button>
+      <!-- <button class="all-scores-btn" @click="() => {}">All Scores</button> -->
     </div>
   </div>
 </template>

@@ -122,13 +122,13 @@ export function useTypingState() {
       e.preventDefault();
       commitWord();
     } else if (e.key.length === 1 && /[a-zA-Z0-9]/.test(e.key)) {
-      typedBuffer.value += e.key;
+      typedBuffer.value += e.key.toLowerCase();
     }
   };
 
   const commitWord = () => {
-    const target = words.value[currentWordIndex.value];
-    const typed = typedBuffer.value;
+    const target = words.value[currentWordIndex.value]; // Already lowercased from pool
+    const typed = typedBuffer.value; // Already lowercased from handleKeydown
     const isCorrect = normalize(typed) === normalize(target);
 
     wordHistory.value.push({

@@ -24,7 +24,7 @@ export function useWordPool() {
   const refillPool = (count: number = 50) => {
     while (wordPool.value.length < count) {
       const entry = getNextEntry();
-      const words = entry.split(/\s+/).filter(w => w.length > 0);
+      const words = entry.split(/\s+/).filter(w => w.length > 0).map(w => w.toLowerCase());
       wordPool.value.push(...words);
     }
   };

@@ -20,7 +20,7 @@ export const wordList: string[] = [
 "Brain rot",
 "Brain dead",
 "Lobotomized",
-"NPC",,
+"NPC",
 "Adopted",
 "Gg ez",
 "Ggez",
